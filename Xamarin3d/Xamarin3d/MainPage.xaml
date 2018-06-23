@@ -4,11 +4,23 @@
              xmlns:local="clr-namespace:Xamarin3d"
              x:Class="Xamarin3d.MainPage">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-    	<Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+    <StackLayout>        
+    	<Label Text="TESTE OPENGL" 
+           HorizontalOptions="CenterAndExpand"
+           FontSize="Large"
+           VerticalOptions="Start"/>
+        <OpenGLView x:Name="openglView" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+        <StackLayout x:Name="controllers">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="foo"/>
+                <Entry Placeholder="10.0; 10.0; 10.0;"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="bar"/>
+                <Entry Placeholder="10.0; 10.0; 10.0;"/>
+            </StackLayout>            
+       
+        </StackLayout>
     </StackLayout>
 
 </ContentPage>
