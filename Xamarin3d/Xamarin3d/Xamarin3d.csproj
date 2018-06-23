@@ -5,7 +5,36 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="shaders\simpleFragmentShader.glsl" />
+    <None Remove="shaders\simpleVertexShader.glsl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="shaders\simpleFragmentShader.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="shaders\simpleVertexShader.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="OpenTK.NETCore" Version="1.1.2749.6433" />
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.446417" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
