@@ -7,18 +7,31 @@ namespace Xamarin3d.model.OpenGLInfrastructure
 {
     struct AttributeProperties
     {
-        int id;
-        string nome;
-        //É um glEnum, tem que consultar uma tabela em algum lugar pra saber qual é qual.
-        int type;
+        public int Id { get;set; }
+        public string Name { get;set; }
+        public All Type { get; set; }
+
+        public AttributeProperties(int id, string nome, All type)
+        {
+            Id = id;
+            Name = nome;
+            Type = type;
+        }
     }
 
     struct UniformProperties
     {
-        int id;
-        string nome;
-        //É um glEnum, tem que consultar uma tabela em algum lugar pra saber qual é qual.
-        int type;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public All Type { get; set; }
+
+        public UniformProperties(int id, string nome, All type)
+        {
+            Id = id;
+            Name = nome;
+            Type = type;
+        }
+
     }
 
     class ShaderProgram
@@ -59,13 +72,41 @@ namespace Xamarin3d.model.OpenGLInfrastructure
                 throw new InvalidOperationException(log.ToString());
             }
             ProgramId = idProgram;
-            //TODO: Fazer baseado em https://stackoverflow.com/questions/440144/in-opengl-is-there-a-way-to-get-a-list-of-all-uniforms-attribs-used-by-a-shade
-            //TODO: puxar uma lista de atributos pra realizar o bind em cima da lista ao invés de hardcoded.
-
-            //TODO: puxar uma lista de uniforms pra realizar o bind em cima da lista ao invés de hardcoded.
+            IntrospectAttributes();
+            IntrospectUniforms();
         }
 
-        internal void Use()
+        private void IntrospectAttributes()
+        {
+            int count;
+            GL.GetProgram(ProgramId, All.ActiveAttributes, out count);
+            for(int i=0; i<count; i++)
+            {
+                const int bufSize = 64;
+                int currAttrLen, currAttrSize; 
+                All currType;
+                StringBuilder currAttrName = new StringBuilder(bufSize);
+                GL.GetActiveAttrib(ProgramId, i, bufSize, out currAttrLen, out currAttrSize, out currType, currAttrName);
+                AttributeProperties currAttr = new AttributeProperties { Id = i, Name = currAttrName.ToString(), Type = currType };
+                attributes.Add(currAttr);
+            }
+        }
+        private void IntrospectUniforms()
+        {
+            int count;
+            GL.GetProgram(ProgramId, All.ActiveUniforms, out count);
+            for (int i = 0; i < count; i++)
+            {
+                const int bufSize = 64;
+                int currAttrLen, currAttrSize;
+                All currType;
+                StringBuilder currAttrName = new StringBuilder(bufSize);
+                GL.GetActiveAttrib(ProgramId, i, bufSize, out currAttrLen, out currAttrSize, out currType, currAttrName);
+                UniformProperties currentUniform = new UniformProperties { Id = i, Name = currAttrName.ToString(), Type = currType };
+                uniforms.Add(currentUniform);
+            }
+        }
+        public void Use()
         {
             //TODO: ver se isso aqui deveria estar é em outro lugar            
             GL.BindAttribLocation(ProgramId, 0, "vPosition");
