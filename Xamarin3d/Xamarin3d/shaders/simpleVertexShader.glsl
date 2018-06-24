@@ -6,5 +6,5 @@ attribute vec3 vPosition;
 
 void main()
 {
-	gl_Position = uMVPMatrix * vec4(vPosition, 1.0);
+	gl_Position = vec4(vPosition, 1.0);
 }

@@ -25,13 +25,15 @@ namespace Xamarin3d
 
         private float currentR = 0;
         public bool Initialized { get; private set; }
+
         /// <summary>
         /// Essa aqui é a função que trata da renderização da view de opengl;
         /// </summary>
         /// <param name="rect"></param>
         private void OpenGLViewOnDisplay(Rectangle rect)
         {
-            if(!Initialized)
+            GL.Viewport((int)rect.Left, (int)rect.Top, (int)rect.Width, (int)rect.Height);
+            if (!Initialized)
             {
                 InitializeScene();
             }
@@ -46,20 +48,29 @@ namespace Xamarin3d
             }
         }
 
+        private ShaderProgram shaderProgram;
 
         private void InitializeScene()
         {
             ShaderSourceLoader shaderSource = new ShaderSourceLoader("simpleVertexShader.glsl", "simpleFragmentShader.glsl");
-            ShaderProgram shaderProgram = new ShaderProgram(shaderSource.VertexShaderSourceCode, shaderSource.FragmentShaderSourceCode);
-           
-
-
+            shaderProgram = new ShaderProgram(shaderSource.VertexShaderSourceCode, shaderSource.FragmentShaderSourceCode);
             Initialized = true;
         }
-
+        float[] vertices;
         private void RenderScene()
         {
-
+            //Ativa coisas no shader
+            shaderProgram.Use();
+            //renderiza o triangulo
+            vertices = new float[] {
+                    0.0f, 0.5f, 0.0f,
+                    -0.5f, -0.5f, 0.0f,
+                    0.5f, -0.5f, 0.0f
+            };
+            GL.VertexAttribPointer(0, 3, All.Float, false, 0, vertices);
+            GL.EnableVertexAttribArray(0);
+            GL.DrawArrays(All.Triangles, 0, 3);
+            GL.Finish();
         }
 	}
 }
