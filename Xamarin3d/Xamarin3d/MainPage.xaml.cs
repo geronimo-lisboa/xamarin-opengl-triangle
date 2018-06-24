@@ -74,14 +74,16 @@ namespace Xamarin3d
                 0.0f, 1.0f, 0.0f, 1.0f,
                 0.0f, 0.0f, 1.0f, 1.0f,
             };
-
+            
             int vpositionIndex = shaderProgram.GetAttributeByName("vPosition").Id;
             GL.VertexAttribPointer(vpositionIndex, 3, All.Float, false, 0, vertices);
             GL.EnableVertexAttribArray(vpositionIndex);
+            shaderProgram.BindAttribute("vPosition");
 
             int colorIndex = shaderProgram.GetAttributeByName("vColor").Id;
             GL.VertexAttribPointer(colorIndex, 4, All.Float, false, 0, colors);
             GL.EnableVertexAttribArray(colorIndex);
+            shaderProgram.BindAttribute("vColor");
 
             GL.DrawArrays(All.Triangles, 0, 3);
             GL.Finish();

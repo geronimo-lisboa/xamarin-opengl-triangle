@@ -53,8 +53,6 @@ namespace Xamarin3d.model.OpenGLInfrastructure
                 throw new InvalidOperationException("Não foi possivel criar o programa");
             GL.AttachShader(idProgram, vertexShader.ShaderId);
             GL.AttachShader(idProgram, fragmentShader.ShaderId);
-            //TODO: ver se isso aqui deveria estar é em outro lugar            
-            //GL.BindAttribLocation(idProgram, 0, "vPosition");
             
             GL.LinkProgram(idProgram);
             int linked = 0;
@@ -136,9 +134,14 @@ namespace Xamarin3d.model.OpenGLInfrastructure
         }
         public void Use()
         {
-            //TODO: ver se isso aqui deveria estar é em outro lugar            
-            GL.BindAttribLocation(ProgramId, 0, "vPosition");
             GL.UseProgram(ProgramId);
+        }
+
+        public void BindAttribute(string attrName)
+        {
+            AttributeProperties attr = this.GetAttributeByName(attrName);
+            GL.BindAttribLocation(ProgramId, attr.Id, attr.Name);
+            //GL.BindAttribLocation(ProgramId, 0, "vPosition")
         }
 
         ~ShaderProgram()
