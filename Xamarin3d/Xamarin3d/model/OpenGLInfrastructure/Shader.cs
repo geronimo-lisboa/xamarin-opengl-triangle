@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Xamarin3d.model
+namespace Xamarin3d.model.OpenGLInfrastructure
 {
     class Shader
     {
@@ -17,13 +17,11 @@ namespace Xamarin3d.model
             int shader = GL.CreateShader(type);
             if (shader == 0)
                 throw new InvalidOperationException("Unable to create shader");
-
             int length = 0;
             GL.ShaderSource(shader, 1, new string[] { source }, (int[])null);
             GL.CompileShader(shader);
-
             int compiled = 0;
-            GL.GetShader(shader, All.CompileStatus, out compiled);  //(shader, ShaderParameter.CompileStatus, out compiled);
+            GL.GetShader(shader, All.CompileStatus, out compiled);  
             if (compiled == 0)
             {
                 length = 0;
@@ -39,6 +37,10 @@ namespace Xamarin3d.model
                 throw new ShaderCompilationErrorException(log.ToString());
             }
             ShaderId = shader;
+        }
+        ~Shader()
+        {
+            //TODO: Implementar destrutor
         }
     }
 }
