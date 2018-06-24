@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.ES30;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Xamarin3d.model.OpenGLInfrastructure
@@ -53,7 +54,7 @@ namespace Xamarin3d.model.OpenGLInfrastructure
             GL.AttachShader(idProgram, vertexShader.ShaderId);
             GL.AttachShader(idProgram, fragmentShader.ShaderId);
             //TODO: ver se isso aqui deveria estar é em outro lugar            
-            GL.BindAttribLocation(idProgram, 0, "vPosition");
+            //GL.BindAttribLocation(idProgram, 0, "vPosition");
             
             GL.LinkProgram(idProgram);
             int linked = 0;
@@ -74,6 +75,33 @@ namespace Xamarin3d.model.OpenGLInfrastructure
             ProgramId = idProgram;
             IntrospectAttributes();
             IntrospectUniforms();
+        }
+        /// <summary>
+        /// Lembre-se que ele só acha atributos ativos. Um atributo só é considerado ativo pelo shader
+        /// se ele for usado no código.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public AttributeProperties GetAttributeByName(string name)
+        {
+            var result = attributes.Where(attr => attr.Name.Equals(name)).ToList();
+            if (result.Count() == 0)
+                throw new InvalidOperationException($"Attribute {name} not found");
+            else
+                return result[0];
+        }
+        /// <summary>
+        /// Lembrando que ele só acha uniforms ativos. Um uniform só é ativo se ele for usado no código do shader.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public UniformProperties GetUniformByName(string name)
+        {
+            var result = uniforms.Where(u => u.Name.Equals(name)).ToList();
+            if (result.Count() == 0)
+                throw new InvalidOperationException($"Uniform {name} not found");
+            else
+                return result[0];
         }
 
         private void IntrospectAttributes()
