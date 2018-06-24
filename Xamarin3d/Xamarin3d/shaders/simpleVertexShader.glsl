@@ -1,6 +1,6 @@
 ﻿//A matrix model view projection, que transforma os vertices de objetos no espaço do modelo em objetos
 //no espaço da tela
-uniform uMVPMatrix;
+uniform mat4 uMVPMatrix;
 //A posição espacial do vertice atual.
 attribute vec3 vPosition;
 

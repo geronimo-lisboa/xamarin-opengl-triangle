@@ -7,6 +7,8 @@ using Xamarin.Forms;
 using OpenTK.Graphics.ES30;
 using System.Reflection;
 using System.IO;
+using Xamarin3d.utilities;
+using Xamarin3d.model;
 
 namespace Xamarin3d
 {
@@ -43,20 +45,43 @@ namespace Xamarin3d
             }
         }
 
+        int LoadShader(All type, string source)
+        {
+            int shader = GL.CreateShader(type);
+            if (shader == 0)
+                throw new InvalidOperationException("Unable to create shader");
+
+            int length = 0;
+            GL.ShaderSource(shader, source);//  (shader, 1, new string[] { source }, (int[])null);
+            GL.CompileShader(shader);
+
+            int compiled = 0;
+            GL.GetShader(shader, All.CompileStatus, out compiled);
+            if (compiled == 0)
+            {
+                length = 0;
+                GL.GetShader(shader, All.InfoLogLength, out length);
+                var log = new StringBuilder(length);
+                if (length > 0)
+                {
+                    
+                    GL.GetShaderInfoLog(shader, length, out length, log);
+                   
+                }
+
+                GL.DeleteShader(shader);
+                throw new InvalidOperationException("Unable to compile shader of type : " + type.ToString());
+            }
+
+            return shader;
+        }
+
+
         private void InitializeScene()
         {
-            //Cria o vertex shader  
-            var assembly = IntrospectionExtensions.GetTypeInfo(typeof(MainPage)).Assembly;
-            Stream stream = assembly.GetManifestResourceStream("Xamarin3d.shaders.simpleVertexShader.glsl");
-            string text = "";
-            using (var reader = new System.IO.StreamReader(stream))
-            {
-                text = reader.ReadToEnd();
-            }
-            System.Diagnostics.Debug.WriteLine(text);
-            //Cria o fragment shader
-            //Cria o shader program
-            //Cria os buffers
+            ShaderSourceLoader shaderSource = new ShaderSourceLoader("simpleVertexShader.glsl", "simpleFragmentShader.glsl");
+            Shader s = new Shader(All.VertexShader, shaderSource.VertexShaderSourceCode);
+
 
             Initialized = true;
         }
