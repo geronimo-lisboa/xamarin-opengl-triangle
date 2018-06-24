@@ -57,6 +57,7 @@ namespace Xamarin3d
             Initialized = true;
         }
         float[] vertices;
+        float[] colors;
         private void RenderScene()
         {
             //Ativa coisas no shader
@@ -67,9 +68,21 @@ namespace Xamarin3d
                     -0.5f, -0.5f, 0.0f,
                     0.5f, -0.5f, 0.0f
             };
+            colors = new float[]
+            {
+                1.0f, 0.0f, 0.0f, 1.0f,
+                0.0f, 1.0f, 0.0f, 1.0f,
+                0.0f, 0.0f, 1.0f, 1.0f,
+            };
+
             int vpositionIndex = shaderProgram.GetAttributeByName("vPosition").Id;
             GL.VertexAttribPointer(vpositionIndex, 3, All.Float, false, 0, vertices);
             GL.EnableVertexAttribArray(vpositionIndex);
+
+            int colorIndex = shaderProgram.GetAttributeByName("vColor").Id;
+            GL.VertexAttribPointer(colorIndex, 4, All.Float, false, 0, colors);
+            GL.EnableVertexAttribArray(colorIndex);
+
             GL.DrawArrays(All.Triangles, 0, 3);
             GL.Finish();
         }
